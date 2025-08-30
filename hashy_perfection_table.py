@@ -4,7 +4,8 @@ __author__ = 'Brendon Taylor'
 __since__ = '22/08/2024'
 
 from data_structures.referential_array import ArrayR
-from typing import Generic, Union, TypeVar
+from typing import Generic, TypeVar
+from constants import PlayerStats
 
 K = TypeVar('K')
 V = TypeVar('V')
@@ -27,7 +28,7 @@ class HashyPerfectionTable(Generic[K, V]):
         Initialise the Hash Table.
         Note: Our default table size 13, if you increase it to 19, you will not get full marks for approach.
         """
-        self.array: ArrayR[Union[tuple[K, V], None]] = ArrayR(13)
+        self.array: ArrayR[tuple[K, V] | None] = ArrayR(13)
         self.count: int = 0
 
     def hash(self, key: K) -> int:
@@ -35,11 +36,11 @@ class HashyPerfectionTable(Generic[K, V]):
         Hash a key for insert/retrieve/update into the hashtable.
 
         Complexity:
-        Best Case Complexity:
-        Worst Case Complexity:
+        Best Case Complexity: O(1) Does not depend on the key length.
+        Worst Case Complexity: O(1) Does not depend on the key length.
         """
-        raise NotImplementedError
-
+        return (ord(key[0]) + ord(key[3])) % len(self.array)
+    
     def __len__(self) -> int:
         """
         Returns number of elements in the hash table
@@ -100,6 +101,14 @@ class HashyPerfectionTable(Generic[K, V]):
         Raises:
         KeyError: When the key doesn't exist.
         """
+        found = False
+        for player_stat in PlayerStats:
+            if key == player_stat.value:
+                found = True
+                break
+        if not found:
+            raise KeyError(f"{key} not inside player statistics")
+
         position: int = self.hash(key)
         if self.array[position] is None:
             raise KeyError(f"{key} not found")
@@ -116,6 +125,15 @@ class HashyPerfectionTable(Generic[K, V]):
         Raises:
         KeyError: When the key doesn't exist.
         """
+        
+        found = False
+        for player_stat in PlayerStats:
+            if key == player_stat.value:
+                found = True
+                break
+        if not found:
+            raise KeyError(f"{key} not inside player statistics")
+
         position: int = self.hash(key)
 
         if self.array[position] is None:
@@ -134,6 +152,15 @@ class HashyPerfectionTable(Generic[K, V]):
         Raises:
         KeyError: When the key doesn't exist.
         """
+        
+        found = False
+        for player_stat in PlayerStats:
+            if key == player_stat.value:
+                found = True
+                break
+        if not found:
+            raise KeyError(f"{key} not inside player statistics")
+
         position: int = self.hash(key)
         self.array[position] = None
         self.count -= 1
@@ -156,3 +183,5 @@ class HashyPerfectionTable(Generic[K, V]):
                 (key, value) = item
                 result += "(" + str(key) + "," + str(value) + ")\n"
         return result
+
+
